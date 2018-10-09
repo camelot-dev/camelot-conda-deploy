@@ -1,0 +1,30 @@
+os: osx
+osx_image: xcode6.4
+language: python
+python:
+  - "2.7"
+  - "3.5"
+  - "3.6"
+before_install:
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+      wget https://repo.continuum.io/miniconda/Miniconda2-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    else
+      wget https://repo.continuum.io/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -O miniconda.sh;
+    fi
+  - chmod +x miniconda.sh
+  - ./miniconda.sh -b -p $HOME/miniconda
+  - export PATH="$HOME/miniconda/bin:$PATH"
+  - conda update --yes -q conda
+  - conda config --set anaconda_upload no
+  - conda info
+install:
+  - conda create --name build-environment python=$TRAVIS_PYTHON_VERSION
+  - source activate build-environment
+  - conda install conda-build conda-verify anaconda-client
+  - conda build --python $TRAVIS_PYTHON_VERSION camelot-py
+  - conda install --use-local camelot-py
+script:
+  - camelot --help
+after_success:
+  - chmod +x deploy_anaconda.sh
+  - ./deploy_anaconda.sh
