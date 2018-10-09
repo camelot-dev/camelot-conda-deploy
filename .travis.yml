@@ -24,8 +24,6 @@ install:
   - conda create --yes --name build-environment python=$TRAVIS_PYTHON_VERSION
   - source activate build-environment
   - conda install --yes conda-build conda-verify anaconda-client
-  - conda build --python $TRAVIS_PYTHON_VERSION python-libarchive-c
-  - conda install --yes --use-local python-libarchive-c
   - conda build --python $TRAVIS_PYTHON_VERSION camelot-py
 script:
   - echo "Removed conda install --use-local camelot-py so can't test camelot --help"
